@@ -22,12 +22,13 @@ def play_sound(sound_file):
 def webhook():
     if request.method == 'POST':
         data = request.json
+        print(data)
         if data.get('action') == 'opened':
             user = data['issue']['user']['login']
             sound_file = open_sound.get(user, open_sound['default'])
             Thread(target=play_sound, args=(sound_file,)).start()
             print('open', user, sound_file)
-        elif data['action'] == 'closed':
+        elif data.get('action') == 'closed':
             user = data['issue']['assignee']
             if user is not None:
                 user = user['login']
@@ -40,5 +41,5 @@ def webhook():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5567, debug=True)
+    app.run(host='0.0.0.0', port=5567, debug=False)
 
